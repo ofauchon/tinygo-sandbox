@@ -4,7 +4,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"github.com/ofauchon/tinygo-sandbox/stm32-solivia-rs485-lorawan/core"
 )
 
@@ -33,9 +32,5 @@ func LoraInitOTAA() {
 		)
 
 	}
-
-	println("main: APPEUI:", hex.EncodeToString(core.LoraStack.Otaa.AppEUI[:]))
-	println("main: DEVEUI:", hex.EncodeToString(core.LoraStack.Otaa.DevEUI[:]))
-	println("main: APPKEY", hex.EncodeToString(core.LoraStack.Otaa.AppKey[:]))
 
 }

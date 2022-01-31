@@ -1,6 +1,6 @@
 build:
-	 tinygo build -x -target=bluepill -size full -o test.elf
+	 tinygo build -x -tags=dev -target=bluepill -size full -o test.elf
 flash:
-	 tinygo flash -x -target=bluepill -programmer=bmp
+	 tinygo flash -x -tags=dev -target=bluepill -programmer=bmp
 debug:
-	 tinygo gdb -x -target=bluepill -programmer=bmp
+	 tinygo gdb -x -tags=dev -target=bluepill -programmer=bmp

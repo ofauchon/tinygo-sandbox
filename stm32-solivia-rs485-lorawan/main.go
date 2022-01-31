@@ -2,6 +2,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"machine"
 	"runtime/interrupt"
 	"time"
@@ -61,6 +62,9 @@ func main() {
 	// Should be declared in config_xxxx.go
 	println("main: Load OTAA Keys")
 	LoraInitOTAA()
+	println("main: APPEUI:", hex.EncodeToString(core.LoraStack.Otaa.AppEUI[:]))
+	println("main: DEVEUI:", hex.EncodeToString(core.LoraStack.Otaa.DevEUI[:]))
+	println("main: APPKEY", hex.EncodeToString(core.LoraStack.Otaa.AppKey[:]))
 
 	println("main: Init Radio Module")
 	core.InitRadio()
