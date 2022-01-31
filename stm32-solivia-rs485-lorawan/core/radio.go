@@ -6,7 +6,7 @@ import (
 	"tinygo.org/x/drivers/sx127x"
 )
 
-func InitLora() {
+func InitRadio() {
 
 	// Prepare gpio for RFM95 spi/dio
 	SPI_CS_PIN.Configure(machine.PinConfig{Mode: machine.PinOutput})

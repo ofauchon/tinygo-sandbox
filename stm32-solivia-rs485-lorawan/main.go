@@ -54,25 +54,26 @@ func main() {
 	println("Delta Solivia RS485 Lora gateway")
 
 	// Init RS485
+	println("main: Init RS485")
 	core.RS485Init(machine.UART2)
 
 	// Lora OTAA (Keys).
 	// Should be declared in config_xxxx.go
+	println("main: Load OTAA Keys")
 	LoraInitOTAA()
 
-	// Initialize DevNonce
+	println("main: Init Radio Module")
+	core.InitRadio()
+
+	println("main: Get Rand Uint32 from LoraStack")
 	rnd := core.LoraRadio.RandomU32()
-	println("main: Rand32:", rnd)
 	core.LoraStack.Otaa.DevNonce[0] = uint8((rnd) & 0xFF)
 	core.LoraStack.Otaa.DevNonce[1] = uint8((rnd >> 8) & 0xFF)
 
-	// Configure SPI, Lora SX127x
-	core.InitLora()
-
-	// Attach the Lora Radio to LoraStack
+	println("main: Attach Radio to Lora Stack")
 	core.LoraStack.AttachLoraRadio(core.LoraRadio)
 
-	// Go routine for keeping us connected to Lorawan
+	println("main: Start Lora Stack loop")
 	go loraConnect()
 
 	// Wait 10 sec to give a chance to get a Lorawan connexion

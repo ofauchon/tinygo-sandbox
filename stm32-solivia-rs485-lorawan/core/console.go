@@ -32,7 +32,7 @@ func processCmd(cmd string) error {
 	switch ss[0] {
 	case "send": // send 02050102600185FC03
 		if len(ss) == 2 {
-			dat, err := hex.DecodeString(ss[1])
+			dat, err := DecodeString(ss[1])
 			if err == nil {
 				RS485Send(dat)
 				rsp := RS485Read(3)
@@ -45,7 +45,7 @@ func processCmd(cmd string) error {
 
 	case "cmd": // ex : CMD 1001
 		if len(ss) == 2 {
-			c, err := hex.DecodeString(ss[1])
+			c, err := DecodeString(ss[1])
 			if err == nil && len(c) == 2 {
 				println("dbg/con: Send command:", ss[1])
 				dat := sdec.GenCommand(0x01, [2]uint8{c[0], c[1]})
