@@ -11,7 +11,8 @@ func InitRadio() {
 	// Prepare gpio for RFM95 spi/dio
 	SPI_CS_PIN.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	SPI_RST_PIN.Configure(machine.PinConfig{Mode: machine.PinOutput})
-	DIO0_PIN.Configure(machine.PinConfig{Mode: machine.PinOutput})
+	DIO0_PIN.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
+	DIO1_PIN.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
 
 	// Configure SPI
 	machine.SPI0.Configure(machine.SPIConfig{
@@ -38,7 +39,17 @@ func InitRadio() {
 		}
 	})
 	if err != nil {
-		println("could not configure pin interrupt:", err.Error())
+		println("could not configure DIO0 pin interrupt:", err.Error())
+	}
+
+	// Setup DIO1 interrupt Handling
+	err = DIO1_PIN.SetInterrupt(DIO1_PIN_CHANGE, func(machine.Pin) {
+		if DIO1_PIN.Get() {
+			LoraRadio.HandleInterrupt()
+		}
+	})
+	if err != nil {
+		println("could not configure DIO1 pin interrupt:", err.Error())
 	}
 
 	// Configure Lora settings (modulation, SF... etc )

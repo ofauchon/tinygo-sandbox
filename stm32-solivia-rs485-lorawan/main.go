@@ -4,8 +4,9 @@ package main
 import (
 	"encoding/hex"
 	"machine"
-	"runtime/interrupt"
 	"time"
+
+	cayennelpp "github.com/TheThingsNetwork/go-cayenne-lib"
 
 	"github.com/ofauchon/tinygo-sandbox/stm32-solivia-rs485-lorawan/core"
 )
@@ -14,12 +15,6 @@ import (
 var (
 	loraConnected bool
 )
-
-// Handle sx127x interrupts
-func radioIntHandler(intr interrupt.Interrupt) {
-	core.LoraRadio.HandleInterrupt()
-
-}
 
 // This will keep us connected
 func loraConnect() {
@@ -84,11 +79,28 @@ func main() {
 	time.Sleep(time.Second * 20)
 
 	// We'll encode with Cayenne LPP protocol
-	//	encoder := cayennelpp.NewEncoder()
+	encoder := cayennelpp.NewEncoder()
 
 	// Loop forever
 	for {
-		time.Sleep(time.Second)
+
+		// Encode payload of Int/Ext sensors
+		encoder.Reset()
+		encoder.AddTemperature(1, float64(20)/1000)
+		encoder.AddRelativeHumidity(2, float64(50)/100)
+		encoder.AddTemperature(1, float64(10)/1000)
+		encoder.AddRelativeHumidity(2, float64(80)/100)
+		cayBytes := encoder.Bytes()
+
+		if loraConnected {
+			println("main: Sending LPP payload: ", hex.EncodeToString(cayBytes))
+			err := core.LoraStack.LoraSendUplink(cayBytes)
+			if err != nil {
+				println(err)
+			}
+		}
+
+		time.Sleep(time.Second * 180)
 		machine.LED.Set(!machine.LED.Get())
 	}
 }

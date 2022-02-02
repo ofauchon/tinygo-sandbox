@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/TheThingsNetwork/go-cayenne-lib v1.1.0 // indirect
 	github.com/jacobsa/crypto v0.0.0-20190317225127-9f44e2d11115 // indirect
 	github.com/jacobsa/oglematchers v0.0.0-20150720000706-141901ea67cd // indirect
 	github.com/jacobsa/oglemock v0.0.0-20150831005832-e94d794d06ff // indirect
@@ -17,4 +18,5 @@ require (
 )
 
 replace tinygo.org/x/drivers => /home/olivier/dev/contrib/tinygo-drivers
+
 replace github.com/ofauchon/go-lorawan-stack => /home/olivier/dev/perso/go-lorawan-stack
