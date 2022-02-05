@@ -61,6 +61,14 @@ func processCmd(cmd string) error {
 
 		}
 
+	case "dereon":
+		println("DERE PIN ON")
+		RS485_DERE_PIN.Set(true)
+
+	case "dereoff":
+		println("DERE PIN OFF")
+		RS485_DERE_PIN.Set(false)
+
 	case "cmdall":
 		println("cmdall")
 		dat := sdec.GenCommand(0x01, [2]uint8{0x60, 0x01})
@@ -71,15 +79,19 @@ func processCmd(cmd string) error {
 			println(err)
 			break
 		}
-		println("dbg/con: raw:", hex.EncodeToString(info.LastPacket))
-		println("dbg/con: id:", info.Id, "part:", info.PartNo, "serial:", info.SerialNo, "date:", info.DateCode)
-		println("dbg/con: ACVolt:", info.ACVolt, "ACFreq", info.ACFreq)
+		println("dbg/con: RAW:", hex.EncodeToString(info.LastPacket))
+		println("dbg/con: ID:", info.Id, "PART:", info.PartNo, "SN:", info.SerialNo, "DATE:", info.DateCode)
+		println("dbg/con: ACVolt:", info.ACVolt, "ACFreq:", info.ACFreq, "ACAmp:", info.ACAmp, "ACPower:", info.ACPower)
+		println("dbg/con: DCVolt:", info.DCVolt, "DCAmp:", info.DCAmp)
 
 	default:
 		println("Error processing command:", cmd)
 		println("Usage:")
 		println("cmdall : Request all datas")
 		println("cmd 1001 : Send command 0x1001")
+		println("cmd 1001 : Send command 0x1001")
+		println("dereon : Switch DE/RE pin ON ")
+		println("dereoff : Switch DE/RE pin OFF ")
 	}
 
 	return nil

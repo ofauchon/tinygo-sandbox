@@ -17,9 +17,10 @@ func RS485Init(port *machine.UART) {
 	RS485_DERE_PIN.Configure(machine.PinConfig{Mode: machine.PinOutput})
 }
 
-// RS485Send() sends byte to the RS485 UART
+// RS485Send() sends bytes on RS485 UART
 func RS485Send(request []uint8) {
 	RS485_DERE_PIN.Set(true)
+	time.Sleep(time.Millisecond)
 	if DEBUG {
 		print("rs485: Send ", len(request), " bytes :")
 		for _, v := range request {
@@ -28,6 +29,7 @@ func RS485Send(request []uint8) {
 	}
 	println("")
 	UartRS485.Write(request)
+	time.Sleep(time.Millisecond * 10)
 	RS485_DERE_PIN.Set(false)
 }
 

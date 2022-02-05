@@ -6,7 +6,7 @@ import (
 	"machine"
 	"time"
 
-	cayennelpp "github.com/TheThingsNetwork/go-cayenne-lib"
+	cayennelpp "github.com/ofauchon/go-cayenne-lib"
 
 	"github.com/ofauchon/tinygo-sandbox/stm32-solivia-rs485-lorawan/core"
 )
@@ -81,8 +81,24 @@ func main() {
 	// We'll encode with Cayenne LPP protocol
 	encoder := cayennelpp.NewEncoder()
 
+	var sdec core.SoliviaDecoder
+
 	// Loop forever
 	for {
+
+		println("cmdall")
+		dat := sdec.GenCommand(0x01, [2]uint8{0x60, 0x01})
+		core.RS485Send(dat)
+		r := RS485Read(5) // Read for 5 seconds
+		info, err := sdec.SoliviaParseInfoMsg(r)
+		if err != nil {
+			println(err)
+			break
+		}
+		println("dbg/con: RAW:", hex.EncodeToString(info.LastPacket))
+		println("dbg/con: ID:", info.Id, "PART:", info.PartNo, "SN:", info.SerialNo, "DATE:", info.DateCode)
+		println("dbg/con: ACVolt:", info.ACVolt, "ACFreq:", info.ACFreq, "ACAmp:", info.ACAmp, "ACPower:", info.ACPower)
+		println("dbg/con: DCVolt:", info.DCVolt, "DCAmp:", info.DCAmp)
 
 		// Encode payload of Int/Ext sensors
 		encoder.Reset()
