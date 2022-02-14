@@ -8,7 +8,7 @@ import (
 
 	cayennelpp "github.com/ofauchon/go-cayenne-lib"
 
-	"github.com/ofauchon/tinygo-sandbox/stm32-solivia-rs485-lorawan/core"
+	"github.com/ofauchon/tinygo-sandbox/stm32-join-lorawan/core"
 )
 
 // Globals
@@ -62,11 +62,7 @@ func main() {
 	core.ConsoleInit(machine.UART1)
 	core.ConsoleStartTask()
 
-	println("Delta Solivia RS485 Lora gateway")
-
-	// Init RS485
-	println("main: Init RS485")
-	core.RS485Init(machine.UART2)
+	println("Nucleo WL55JC Lorawan Demo")
 
 	// Lora OTAA (Keys).
 	// Should be declared in config_xxxx.go
@@ -79,10 +75,12 @@ func main() {
 	println("main: Init Radio Module")
 	core.InitRadio()
 
-	println("main: Get Rand Uint32 from LoraStack")
-	rnd := core.LoraRadio.RandomU32()
-	core.LoraStack.Otaa.DevNonce[0] = uint8((rnd) & 0xFF)
-	core.LoraStack.Otaa.DevNonce[1] = uint8((rnd >> 8) & 0xFF)
+	/*
+		println("main: Get Rand Uint32 from LoraStack")
+		rnd := core.LoraRadio.RandomU32()
+		core.LoraStack.Otaa.DevNonce[0] = uint8((rnd) & 0xFF)
+		core.LoraStack.Otaa.DevNonce[1] = uint8((rnd >> 8) & 0xFF)
+	*/
 
 	println("main: Attach Radio to Lora Stack")
 	core.LoraStack.AttachLoraRadio(core.LoraRadio)
@@ -96,41 +94,15 @@ func main() {
 	// We'll encode with Cayenne LPP protocol
 	encoder := cayennelpp.NewEncoder()
 
-	var sdec core.SoliviaDecoder
-
 	// Loop forever
 	for {
 
-		println("main: Get infos from PV")
-		dat := sdec.GenCommand(0x01, [2]uint8{0x60, 0x01})
-		core.RS485Send(dat)
-
-		r := core.RS485Read(5) // Read for 5 seconds
-		info, err := sdec.SoliviaParseInfoMsg(r)
-		if err != nil {
-			ledMorse([]uint16{500, 250, 250, 250, 250, 250, 250})
-			println("main: Communication error:", err)
-			println("main: Waiting for 60 seconds")
-			time.Sleep(time.Second * 60)
-			continue
-		}
-		println("main: Solivia infos:")
-		println("      RAW:", hex.EncodeToString(info.LastPacket))
-		println("      ID:", info.Id, "PART:", info.PartNo, "SN:", info.SerialNo, "DATE:", info.DateCode)
-		println("      ACVolt:", info.ACVolt, "ACFreq:", info.ACFreq, "ACAmp:", info.ACAmp, "ACPower:", info.ACPower)
-		println("      DCVolt:", info.DCVolt, "DCAmp:", info.DCAmp)
-
-		// TESTS : info := &core.SoliviaInfos{ACAmp: 30, ACVolt: 2200, ACFreq: 499, DCVolt: 200, DCAmp: 30}
-
 		// Encode payload of Int/Ext sensors
 		encoder.Reset()
-		encoder.AddVoltage(1, float64(info.ACVolt))
-		encoder.AddFrequency(1, float64(info.ACFreq))
-		encoder.AddCurrent(1, float64(info.ACAmp))
-		encoder.AddPower(1, float64(info.ACPower))
-
-		encoder.AddVoltage(2, float64(info.DCVolt))
-		encoder.AddCurrent(2, float64(info.DCAmp))
+		encoder.AddVoltage(1, float64(220))
+		encoder.AddFrequency(1, float64(50))
+		encoder.AddCurrent(1, float64(5))
+		encoder.AddPower(1, float64(1200))
 
 		cayBytes := encoder.Bytes()
 
