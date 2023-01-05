@@ -40,4 +40,4 @@ func prepareRadio() {
 		panic("main: sx126x not detected... Aborting")
 	}
 
-
+}

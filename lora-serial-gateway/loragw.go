@@ -8,10 +8,9 @@ import (
 	"tinygo.org/x/drivers/lora"
 )
 
-
 var uart *machine.UART
 
-var  loraConf lora.Config
+var loraConf lora.Config
 
 // serial() function is a goroutine for handling USART commands
 func serial() string {
@@ -77,19 +76,14 @@ func main() {
 
 	loraRadio.LoraConfig(loraConf)
 
-
-
-
 	// UART
 	uart = machine.UART1
 	uart.Configure(machine.UARTConfig{9600, 1, 0})
 	go serial()
 
-
 	for {
 		machine.LED.Set(!machine.LED.Get())
 		time.Sleep(1 * time.Second)
 	}
-
 
 }
