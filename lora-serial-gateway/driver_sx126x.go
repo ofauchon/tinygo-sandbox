@@ -40,6 +40,4 @@ func prepareRadio() {
 		panic("main: sx126x not detected... Aborting")
 	}
 
-	// Attach the Lora Radio to LoraStack
-	loraStack.AttachLoraRadio(loraRadio)
-}
+

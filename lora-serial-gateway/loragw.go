@@ -3,14 +3,13 @@ package main
 // Lora serial gateway
 
 import (
-	"encoding/hex"
 	"machine"
 	"time"
-
-	"github.com/ofauchon/go-lorawan-stack"
 	"tinygo.org/x/drivers/lora"
 )
 
+
+var uart *machine.UART
 
 
 // serial() function is a goroutine for handling USART commands
@@ -81,7 +80,7 @@ func main() {
 
 
 	// UART
-	uart = machine.UART0
+	uart = machine.UART1
 	uart.Configure(machine.UARTConfig{9600, 1, 0})
 	go serial()
 
@@ -89,7 +88,6 @@ func main() {
 	for {
 		machine.LED.Set(!machine.LED.Get())
 		time.Sleep(1 * time.Second)
-		cycle++
 	}
 
 
