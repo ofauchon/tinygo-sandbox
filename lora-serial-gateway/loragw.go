@@ -11,6 +11,7 @@ import (
 
 var uart *machine.UART
 
+var  loraConf lora.Config
 
 // serial() function is a goroutine for handling USART commands
 func serial() string {
@@ -60,7 +61,7 @@ func main() {
 	prepareRadio()
 
 	// Initial lora configuration
-	loraConf := lora.Config{
+	loraConf = lora.Config{
 		Freq:           868100000,
 		Bw:             lora.Bandwidth_125_0,
 		Sf:             lora.SpreadingFactor9,
