@@ -6,7 +6,7 @@ import (
 )
 
 const TX_TMOUT uint32 = 2000
-const RX_TMOUT uint32 = 2000
+const RX_TMOUT uint32 = 10000
 
 func atoi(str string) (uint32, error) {
 	var num uint32
@@ -159,7 +159,9 @@ func processCmd(cmd string) error {
 		}
 
 	case "AT+RX":
+		println("OK")
 		r, err := loraRadio.LoraRx(RX_TMOUT)
+		println("RX TIMEOUT")
 		if err != nil {
 			println("RX:", string(r))
 		} else {
