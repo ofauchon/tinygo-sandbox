@@ -5,6 +5,7 @@ package main
 import (
 	"machine"
 	"time"
+
 	"tinygo.org/x/drivers/lora"
 )
 
@@ -74,11 +75,12 @@ func main() {
 		LoraTxPowerDBm: 20,
 	}
 
+	println("Default Lora Config")
 	loraRadio.LoraConfig(loraConf)
 
 	// UART
-	uart = machine.UART1
-	uart.Configure(machine.UARTConfig{9600, 1, 0})
+	uart = machine.DefaultUART
+	//uart.Configure(machine.UARTConfig{9600, 1, 0})
 	go serial()
 
 	for {

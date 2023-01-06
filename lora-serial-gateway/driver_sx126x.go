@@ -4,7 +4,7 @@ package main
 
 import (
 	"device/stm32"
-	rfswitch "github.com/ofauchon/tinygo-sandbox/rfswitch"
+	rfswitch "github.com/ofauchon/tinygo-sandbox/lora-serial-gateway/rfswitch"
 	"machine"
 	"runtime/interrupt"
 	"tinygo.org/x/drivers/sx126x"
